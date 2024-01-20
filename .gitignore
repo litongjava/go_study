@@ -140,3 +140,4 @@ local.properties
 /captures
 /build
 *.exe
+vendor/

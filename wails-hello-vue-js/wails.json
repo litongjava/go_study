@@ -1,0 +1,13 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "wails-hello-vue-js",
+  "outputfilename": "wails-hello-vue-js",
+  "frontend:install": "",
+  "frontend:build": "",
+  "frontend:dev:watcher": "",
+  "frontend:dev:serverUrl": "http://localhost:3000/",
+  "author": {
+    "name": "litongjava",
+    "email": "litongjava@qq.com"
+  }
+}

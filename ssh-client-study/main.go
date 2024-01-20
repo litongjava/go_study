@@ -1,20 +1,24 @@
 package main
 
 import (
-  "bytes"
   "fmt"
-  "golang.org/x/crypto/ssh"
   "log"
   "time"
+
+  "golang.org/x/crypto/ssh"
 )
+
+func init() {
+  log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
+}
 
 func main() {
   sshHost := "192.168.3.9"
+  sshPort := 22
   sshUser := "root"
   sshPasswrod := "Cttic@2013"
   sshType := "password" // password或者key
   //sshKeyPath := "" // ssh id_rsa.id路径
-  sshPort := 22
 
   // 创建ssh登录配置
   config := &ssh.ClientConfig{
@@ -36,6 +40,7 @@ func main() {
   if err != nil {
     log.Fatal("创建ssh client 失败", err)
   }
+  log.Println("创建ssh client 成功:", sshClient)
   defer sshClient.Close()
 
   // 创建ssh-session
@@ -43,53 +48,15 @@ func main() {
   if err != nil {
     log.Fatal("创建ssh session失败", err)
   }
-
+  log.Println("创建ssh session成功:", session)
   defer session.Close()
 
-  // 请求一个伪终端
-  if err := session.RequestPty("xterm", 80, 40, ssh.TerminalModes{}); err != nil {
-    log.Println(err)
-  }
-
-  // 创建一个缓冲区来保存会话的输出
-  var b bytes.Buffer
-  session.Stdout = &b
-
-  // 启动会话。这应该会自动发送欢迎消息
-  if err := session.Shell(); err != nil {
-    log.Println(err)
-  }
-
-  // 等待会话结束。注意这可能需要一些时间，你可能需要考虑使用timeout
-  if err := session.Wait(); err != nil {
-    log.Println(err)
-  }
-
-  // 打印欢迎消息
-  fmt.Println(b.String())
-
-  // 执行远程命令
-  combo, err := session.CombinedOutput("whoami; cd /; ls -al;")
+  // 运行远程命令
+  cmd := "ls -l"
+  output, err := session.Output(cmd)
   if err != nil {
-    log.Fatal("远程执行cmd失败", err)
+    log.Fatal("运行远程命令失败", err)
   }
-  log.Println("命令输出:", string(combo))
-}
+  fmt.Println(string(output))
 
-//func publicKeyAuthFunc(kPath string) ssh.AuthMethod  {
-//	keyPath ,err := homedir.Expand(kPath)
-//	if err != nil {
-//		log.Fatal("find key's home dir failed",err)
-//	}
-//
-//	key,err := ioutil.ReadFile(keyPath)
-//	if err != nil {
-//		log.Fatal("ssh key file read failed",err)
-//	}
-//
-//	signer,err := ssh.ParsePrivateKey(key)
-//	if err != nil {
-//		log.Fatal("ssh key signer failed",err)
-//	}
-//	return ssh.PublicKeys(signer)
-//}
+}
