@@ -1,5 +1,3 @@
-module go-db
+module taos-demo
 
-go 1.16
-
-require github.com/go-sql-driver/mysql v1.6.0 // indirect
+go 1.21.1
