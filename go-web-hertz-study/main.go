@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"io"
+	"log"
+	"net"
 	"os"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -16,17 +18,15 @@ func main() {
 
 	// SetLevel sets the level of logs below which logs will not be output.
 	hlog.SetLevel(hlog.LevelDebug)
-	f, err := os.Create("hertz.log")
+	conn, err := net.Dial("tcp", "127.0.0.1:5000")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-
-	defer f.Close()
 
 	// SetOutput sets the output of default logger. By default, it is stderr.
 	//hlog.SetOutput(f)
 	// if you want to output the log to the file and the stdout at the same time, you can use the following codes
-	fileWriter := io.MultiWriter(f, os.Stdout)
+	fileWriter := io.MultiWriter(conn, os.Stdout)
 	hlog.SetOutput(fileWriter)
 
 	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {

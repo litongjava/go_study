@@ -2,7 +2,10 @@ module go-web-hertz-study
 
 go 1.21.1
 
-require github.com/cloudwego/hertz v0.8.1
+require (
+	github.com/cloudwego/hertz v0.8.1
+	github.com/hertz-contrib/cors v0.1.0
+)
 
 require (
 	github.com/bytedance/go-tagexpr/v2 v2.9.2 // indirect
