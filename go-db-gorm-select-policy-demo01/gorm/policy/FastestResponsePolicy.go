@@ -5,6 +5,7 @@ import (
   "github.com/cloudwego/hertz/pkg/common/hlog"
   "gorm.io/gorm"
   "log"
+  "reflect"
   "sync"
 )
 
@@ -62,7 +63,7 @@ func (p *FastestResponsePolicy) Resolve(pools []gorm.ConnPool) gorm.ConnPool {
   }
 
   for _, pool := range pools {
-    hlog.Infof("address: %p \n", &pool)
+    hlog.Info("address:", reflect.ValueOf(pool).Pointer())
   }
   minAvgRT := float64(^uint(0) >> 1) // 初始化为最大float64值
   var selectedPool gorm.ConnPool

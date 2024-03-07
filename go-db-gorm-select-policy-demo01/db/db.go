@@ -8,6 +8,7 @@ import (
   "gorm.io/driver/postgres"
   "gorm.io/gorm"
   "gorm.io/plugin/dbresolver"
+  "reflect"
   "strings"
   "time"
 )
@@ -55,8 +56,8 @@ func registerCallBack(db *gorm.DB) {
     elapsedTime := endMilli - startMilli
     hlog.Info("Query execution time (ms): ", endMilli, startMilli, elapsedTime)
 
-    hlog.Infof("address: %p \n", &db.Statement.ConnPool)
-    hlog.Infof("address: %p \n", &db.ConnPool)
+    hlog.Info("address:", reflect.ValueOf(db.Statement.ConnPool).Pointer())
+    hlog.Info("address:", reflect.ValueOf(db.ConnPool).Pointer())
 
     // 更新响应时间统计
     policy.UpdateResponseTime(db.Statement.ConnPool, elapsedTime)
